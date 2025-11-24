@@ -3,10 +3,7 @@
     "name": "laravel/livewire-starter-kit",
     "type": "project",
     "description": "The official Laravel starter kit for Livewire.",
-    "keywords": [
-        "laravel",
-        "framework"
-    ],
+    "keywords": ["laravel", "framework"],
     "license": "MIT",
     "require": {
         "php": "^8.2",
@@ -15,7 +12,7 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "livewire/flux": "^2.1.1",
-        "livewire/volt": "^1.7.0"
+        "livewire/volt": "^1.10"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -56,11 +53,28 @@
         ],
         "test": [
             "@php artisan config:clear --ansi",
+            "@pint",
+            "@phpstan",
+            "@blade-formatter",
+            "@blade-format-test",
             "@php artisan test"
+        ],
+        "pint": [
+            "vendor/bin/pint"
+        ],
+        "phpstan": [
+            "vendor/bin/phpstan analyse"
+        ],
+        "blade-formatter": [
+            "npx blade-formatter \"resources/**/*.blade.php\" --write"
+        ],
+        "blade-format-test": [
+            "npx blade-formatter \"resources/**/*.blade.php\" -c -d"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force",

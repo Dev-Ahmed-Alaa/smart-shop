@@ -1,0 +1,32 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - database
+        - routes
+        - tests
+
+    # Rule level (0-9)
+    level: max
+
+    reportUnmatchedIgnoredErrors: false
+
+    ignoreErrors:
+        - '#PHPDoc tag @var#'
+        - '#Cannot call method name\(\) on#'
+        - '#Cannot call method toBe\(\) on#'
+        - '#Undefined variable: \$this#'
+        - '#Function something\(\) has no return type#'
+        - '#PHPDoc type class-string<Illuminate\\Database\\Eloquent\\Model>#'
+        - '#Static method .*::factory\(\) invoked with 1 parameter#'
+        - '#Instanceof between .* will always evaluate to true#'
+        - '#Call to function is_string\(\) with non-falsy-string will always evaluate to true#'
+        - '#Parameter .* \$middleware of method Illuminate\\Routing\\Route::middleware\(\) expects#'
+
+    excludePaths:
+        - ./*/*/FileToIgnore.php
+        - app/Livewire/Settings/*
+        - app/Livewire/Actions/*
+

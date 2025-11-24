@@ -35,4 +35,29 @@ return [
         ],
     ],
 
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY'),
+    ],
+
+    'groq' => [
+        'api_key' => env('GROQ_API_KEY'),
+        'model' => env('GROQ_MODEL', 'openai/gpt-oss-20b'),
+        'temperature' => env('GROQ_TEMPERATURE', 1),
+        'max_completion_tokens' => env('GROQ_MAX_COMPLETION_TOKENS', 8192),
+        'top_p' => env('GROQ_TOP_P', 1),
+        'reasoning_effort' => env('GROQ_REASONING_EFFORT', 'medium'),
+        'fallback_models' => [
+            'openai/gpt-oss-20b',
+            'openai/gpt-oss-120b',
+            'openai/gpt-oss-safeguard-20b',
+            'groq/compound',
+            'groq/compound-mini',
+            'llama-3.1-8b-instant',
+            'llama-3.3-70b-versatile',
+            'meta-llama/llama-4-maverick-17b-12',
+            'meta-llama/llama-4-scout-17b-16e-i',
+            'moonshotai/kimi-k2-instruct-0905',
+        ],
+    ],
+
 ];

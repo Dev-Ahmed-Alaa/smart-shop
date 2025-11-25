@@ -238,7 +238,7 @@ vendor/bin/phpstan analyse
 -   Laravel 12
 -   Livewire 3
 -   Tailwind CSS v4
--   Alpine.js (comes with Livewire)
+-   Alpine.js
 -   Groq API
 -   Filament v3 (admin panel)
 -   SQLite (or MySQL/PostgreSQL)

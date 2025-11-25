@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Settings;
 
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Validation\ValidationException;
@@ -31,7 +32,10 @@ class Password extends Component
             throw $e;
         }
 
-        Auth::user()->update([
+        /** @var User $user */
+        $user = Auth::user();
+        /** @var array{current_password: string, password: string} $validated */
+        $user->update([
             'password' => $validated['password'],
         ]);
 

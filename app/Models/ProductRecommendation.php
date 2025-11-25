@@ -57,7 +57,7 @@ class ProductRecommendation extends Model
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product>
      */
-    public function viewedProducts()
+    public function viewedProducts(): \Illuminate\Database\Eloquent\Collection
     {
         return Product::whereIn('id', $this->viewed_product_ids ?? [])->get();
     }
@@ -67,7 +67,7 @@ class ProductRecommendation extends Model
      *
      * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Product>
      */
-    public function recommendedProducts()
+    public function recommendedProducts(): \Illuminate\Database\Eloquent\Collection
     {
         return Product::whereIn('id', $this->recommended_product_ids ?? [])->get();
     }

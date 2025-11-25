@@ -82,24 +82,6 @@ class ProductRecommendationService
         $aiPrompt = $result['prompt'];
         $aiResponse = $result['response'];
 
-        // Ensure we always return EloquentCollection
-        // @phpstan-ignore-next-line
-        if (! ($products instanceof EloquentCollection)) {
-            // Clear the bad cache entry
-            Cache::forget($cacheKey);
-
-            // Return random products as fallback
-            $recommendations = $this->getRandomProducts($limit);
-            if ($shouldLog) {
-                /** @var array<int> $recommendedIds */
-                $recommendedIds = $recommendations->pluck('id')->toArray();
-                $this->logRecommendation($viewedProductIds, $recommendedIds, false, null, null);
-                Cache::put($logKey, true, now()->addHours(1));
-            }
-
-            return $recommendations;
-        }
-
         // Ensure we always return exactly $limit products
         if ($products->count() < $limit) {
             // Fill with random products if we got fewer than requested

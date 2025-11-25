@@ -55,8 +55,10 @@ class Home extends Component
      */
     public function render(): View
     {
-        // @phpstan-ignore-next-line
-        return view('livewire.pages.home')
-            ->layout('components.layouts.app', ['title' => __('SmartShop')]);
+        $view = view('livewire.pages.home');
+        /** @var View $layoutView */
+        $layoutView = $view->layout('components.layouts.app', ['title' => __('SmartShop')]);
+
+        return $layoutView;
     }
 }

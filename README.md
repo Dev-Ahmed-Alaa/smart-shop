@@ -1,64 +1,52 @@
-# SmartShop Mini - AI-Powered Product Recommender
+# SmartShop Mini
 
-A minimal e-commerce demo application built with Laravel, Livewire, and AI-powered product recommendations.
+A lightweight e-commerce demo with AI-powered product recommendations. Built with Laravel and Livewire.
 
-## Features
+## What's Inside
 
-- **User Authentication**: Standard Laravel authentication (Register/Login/Logout)
-- **Product Catalog**: Browse and search through 20+ products
-- **AI-Powered Recommendations**: Personalized product suggestions based on viewing history
-- **Shopping Cart**: Session-based cart with quantity controls
-- **Checkout Simulation**: Simulated payment processing
+-   User authentication (register, login, logout)
+-   Product catalog with search (25+ products)
+-   AI-powered product recommendations based on browsing history
+-   Shopping cart with quantity management
+-   Checkout flow (simulated)
 
-## Requirements
+## Getting Started
 
-- PHP 8.2 or higher
-- Composer
-- Node.js and npm
-- SQLite (or MySQL/PostgreSQL)
-- Groq API Key (optional, falls back to random recommendations if not configured)
+### What You'll Need
 
-## Setup Instructions
+-   PHP 8.3+
+-   Composer
+-   Node.js 18+ and npm
+-   SQLite (works out of the box) or MySQL/PostgreSQL
+-   Groq API key (optional - app works without it, just shows random recommendations)
 
-### Prerequisites
+### Installation
 
-- PHP 8.3 or higher
-- Composer
-- Node.js 18+ and npm
-- SQLite (default) or MySQL/PostgreSQL
-- Groq API Key (optional, for AI recommendations)
+1. Clone the repo:
 
-### Step-by-Step Installation
-
-1. **Clone the repository:**
 ```bash
-git clone <repository-url>
+git clone https://github.com/Dev-Ahmed-Alaa/smart-shop
 cd smart-shop
 ```
 
-2. **Install PHP dependencies:**
+2. Install dependencies:
+
 ```bash
 composer install
-```
-
-3. **Install Node.js dependencies:**
-```bash
 npm install
 ```
 
-4. **Copy the environment file:**
+3. Set up environment:
+
 ```bash
 cp .env.example .env
-```
-
-5. **Generate application key:**
-```bash
 php artisan key:generate
 ```
 
-6. **Configure your database in `.env`:**
+4. Configure database in `.env`:
+
 ```env
-# For SQLite (default - no additional setup needed)
+# SQLite works by default, no setup needed
 DB_CONNECTION=sqlite
 
 # Or use MySQL/PostgreSQL
@@ -70,12 +58,13 @@ DB_CONNECTION=sqlite
 # DB_PASSWORD=
 ```
 
-7. **Configure Groq API key for AI recommendations:**
+5. Add Groq API key (optional):
+
 ```env
-# Get your API key from https://console.groq.com/
+# Get one from https://console.groq.com/
 GROQ_API_KEY=
 
-# Optional: Customize Groq API settings
+# These are optional tweaks
 GROQ_MODEL=openai/gpt-oss-20b
 GROQ_TEMPERATURE=1
 GROQ_MAX_COMPLETION_TOKENS=8192
@@ -83,94 +72,76 @@ GROQ_TOP_P=1
 GROQ_REASONING_EFFORT=medium
 ```
 
-8. **Run migrations and seed the database:**
+6. Set up the database:
+
 ```bash
 php artisan migrate --force
 php artisan db:seed
 ```
 
-This will create:
-- A test user (`user@example.com` / `password`)
-- 25 real products with images
-- Sample product recommendations
+This creates a test user (`user@example.com` / `password`), 25 products with images, and some sample recommendations.
 
-9. **Build frontend assets:**
+7. Build assets:
+
 ```bash
-# For production
+# Production
 npm run build
 
-# Or for development (with hot reload)
+# Or development with hot reload
 npm run dev
 ```
 
-10. **Start the development server:**
+8. Start the server:
+
 ```bash
 php artisan serve
 ```
 
-The application will be available at `http://localhost:8000`
+Visit `http://localhost:8000` and you're good to go.
 
-### Quick Start (Using Composer Setup Script)
+### Quick Setup
 
-Alternatively, you can use the setup script:
+Or just run:
+
 ```bash
 composer run setup
 ```
 
-This will automatically:
-- Install dependencies
-- Copy `.env` file
-- Generate application key
-- Run migrations
-- Install npm dependencies
-- Build frontend assets
+This handles everything: dependencies, env file, migrations, npm install, and asset building.
 
-## Default Test User
+## Test Credentials
 
-- **Email**: `user@example.com`
-- **Password**: `password`
+-   Email: `user@example.com`
+-   Password: `password`
 
-## AI Recommendation System
+## How the AI Recommendations Work
 
-### Which AI API We Used and Why
+I went with Groq API for a few reasons:
 
-**We chose Groq API** for the following reasons:
+-   **Fast**: Seriously fast inference, way faster than typical cloud services
+-   **Cheap**: Good free tier, perfect for demos
+-   **OpenAI-compatible**: Easy to swap providers if needed
+-   **Multiple models**: Lots of options if one hits rate limits
+-   **Reliable fallback**: If everything fails, it just shows random products
 
-1. **OpenAI-Compatible Interface**: Groq uses the OpenAI API format, making it easy to integrate and switch between providers if needed.
+### The Flow
 
-2. **High Performance**: Groq provides extremely fast inference speeds, often 10-100x faster than traditional cloud-based AI services, which is crucial for real-time product recommendations.
+1. When you view a product, it gets added to your session (keeps the last 3 viewed products).
 
-3. **Cost-Effective**: Groq offers competitive pricing with generous free tier limits, making it ideal for demos and production applications.
+2. When you need recommendations (home page or product page), the app:
 
-4. **Multiple Model Options**: Groq supports various models including:
-   - OpenAI-compatible models (`openai/gpt-oss-20b`, `openai/gpt-oss-120b`)
-   - Meta Llama models (`llama-3.1-8b-instant`, `llama-3.3-70b-versatile`)
-   - Groq's own models (`groq/compound`, `groq/compound-mini`)
-   - Moonshot AI models (`moonshotai/kimi-k2-instruct-0905`)
+    - Grabs your last 3 viewed products
+    - Sends them to Groq along with the full product catalog
+    - Asks for 3 similar product IDs
+    - Returns those products
 
-5. **Automatic Fallback**: The system includes intelligent fallback logic that automatically tries alternative models if the primary model hits rate limits (429 errors) or fails, ensuring high availability.
+3. Results are cached for 1 hour to avoid hammering the API.
 
-6. **Developer-Friendly**: Simple API structure, excellent documentation, and easy-to-use console for managing API keys.
+4. If Groq is down or you don't have an API key, it falls back to 3 random products. The app always works.
 
-### How It Works
+### Example API Call
 
-1. **Product Viewing Tracking**: When a user views a product, it's added to their session's viewed products list (stores the last 3 viewed products).
-
-2. **Recommendation Request**: When recommendations are needed (on the home page or product detail page), the system:
-   - Retrieves the last 3 viewed products from the session
-   - Sends the viewed products' names and descriptions to the Groq API
-   - Includes the full product catalog in the prompt
-   - Asks the AI to suggest similar products from the available catalog
-   - Parses the AI response to extract product IDs
-   - Returns the recommended products
-
-3. **Caching**: Recommendations are cached for 1 hour based on the viewed product IDs to reduce API calls and improve performance.
-
-4. **Fallback**: If the Groq API key is not configured, the API request fails, or all models fail, the system automatically falls back to showing 3 random products. This ensures the application always works, even without AI integration.
-
-### Example Prompt Sent to the API
-
-Here's an actual example of the prompt sent to Groq API:
+Here's what gets sent to Groq:
 
 ```
 Based on these viewed products:
@@ -181,108 +152,97 @@ Based on these viewed products:
 
 Suggest 3 similar products from this product list:
 
-ID 1: Wireless Bluetooth Headphones - Premium noise-cancelling wireless headphones with 30-hour battery life, crystal-clear sound quality, and comfortable over-ear design. Perfect for music lovers and professionals.
-ID 2: Smart Watch Pro - Advanced fitness tracking smartwatch with heart rate monitor, GPS, sleep tracking, and 7-day battery life. Water-resistant and compatible with iOS and Android.
-ID 3: Running Shoes - Lightweight running shoes with advanced cushioning technology, breathable mesh upper, and durable rubber outsole. Designed for maximum comfort and performance.
-ID 4: Smartphone 128GB - Latest generation smartphone with 6.7-inch OLED display, triple camera system, 5G connectivity, and all-day battery life. Available in multiple colors.
-ID 5: Designer Sunglasses - Premium UV protection sunglasses with polarized lenses, lightweight frame, and stylish design. Includes protective case and cleaning cloth.
-... (continues for all products)
+ID 1: Wireless Bluetooth Headphones - Premium noise-cancelling wireless headphones...
+ID 2: Smart Watch Pro - Advanced fitness tracking smartwatch...
+ID 3: Running Shoes - Lightweight running shoes...
+ID 4: Smartphone 128GB - Latest generation smartphone...
+ID 5: Designer Sunglasses - Premium UV protection sunglasses...
+... (all products listed)
 
 Return only the product IDs (one per line, numbers only), no explanations.
 ```
 
-**Expected AI Response:**
+Groq responds with something like:
+
 ```
 4
 18
 19
 ```
 
-The system then extracts these IDs and returns the corresponding products.
+The app extracts those IDs and shows you those products.
 
-### Model Fallback Strategy
+### Model Fallback
 
-The system implements a smart fallback mechanism:
+If the primary model (`openai/gpt-oss-20b`) hits a rate limit, it automatically tries these in order:
 
-1. **Primary Model**: Uses `openai/gpt-oss-20b` by default (configurable via `GROQ_MODEL`)
+-   `openai/gpt-oss-120b`
+-   `openai/gpt-oss-safeguard-20b`
+-   `groq/compound`
+-   `groq/compound-mini`
+-   `llama-3.1-8b-instant`
+-   `llama-3.3-70b-versatile`
+-   `meta-llama/llama-4-maverick-17b-12`
+-   `meta-llama/llama-4-scout-17b-16e-i`
+-   `moonshotai/kimi-k2-instruct-0905`
 
-2. **Fallback Models**: If the primary model returns a 429 (rate limit) error, the system automatically tries these models in order:
-   - `openai/gpt-oss-120b`
-   - `openai/gpt-oss-safeguard-20b`
-   - `groq/compound`
-   - `groq/compound-mini`
-   - `llama-3.1-8b-instant`
-   - `llama-3.3-70b-versatile`
-   - `meta-llama/llama-4-maverick-17b-12`
-   - `meta-llama/llama-4-scout-17b-16e-i`
-   - `moonshotai/kimi-k2-instruct-0905`
-
-3. **Complete Fallback**: If all models fail, the system returns 3 random products from the catalog.
+If all models fail, you get 3 random products. No errors, no broken pages.
 
 ## Project Structure
 
 ```
 app/
 ├── Models/
-│   └── Product.php          # Product model
+│   └── Product.php
 ├── Services/
-│   ├── CartService.php      # Session-based cart management
-│   └── ProductRecommendationService.php  # AI recommendation logic
+│   ├── CartService.php
+│   └── ProductRecommendationService.php
 resources/
 └── views/
     └── livewire/
         └── pages/
-            ├── home.blade.php           # Home page with product listing
+            ├── home.blade.php
             ├── products/
-            │   └── show.blade.php       # Product detail page
-            └── cart.blade.php          # Shopping cart page
+            │   └── show.blade.php
+            └── cart.blade.php
 ```
 
-## Running Tests
+## Testing
 
-Run the test suite:
+Run all tests:
 
 ```bash
 php artisan test
 ```
 
-Run specific test files:
+Run specific tests:
 
 ```bash
 php artisan test tests/Feature/ProductRecommendationTest.php
-php artisan test tests/Feature/CartTest.php
 ```
 
 ## Code Quality
 
-The project follows Laravel best practices and includes:
-
-- **Laravel Pint**: Code style formatting
-- **PHPStan**: Static analysis (max level)
-- **Pest**: Testing framework
-
-Run code quality checks:
+Uses Laravel Pint for formatting and PHPStan (max level) for static analysis:
 
 ```bash
 # Format code
 vendor/bin/pint
 
-# Run static analysis
+# Static analysis
 vendor/bin/phpstan analyse
 ```
 
-## Technologies Used
+## Tech Stack
 
-- **Laravel 12**: PHP framework
-- **Livewire 3**: Full-stack framework for dynamic interfaces
-- **Flux UI**: Component library for Livewire
-- **Tailwind CSS v4**: Utility-first CSS framework
-- **Alpine.js**: Lightweight JavaScript framework (included with Livewire)
-- **Groq API**: AI-powered recommendations (OpenAI-compatible, fast inference)
-- **Filament v3**: Admin panel for viewing AI recommendations
-- **SQLite**: Database (can be changed to MySQL/PostgreSQL)
+-   Laravel 12
+-   Livewire 3
+-   Tailwind CSS v4
+-   Alpine.js
+-   Groq API
+-   Filament v3 (admin panel)
+-   SQLite (or MySQL/PostgreSQL)
 
 ## License
 
-This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-
+MIT

@@ -102,8 +102,10 @@ class Show extends Component
      */
     public function render(): View
     {
-        // @phpstan-ignore-next-line
-        return view('livewire.pages.products.show')
-            ->layout('components.layouts.app', ['title' => $this->product->name]);
+        $view = view('livewire.pages.products.show');
+        /** @var View $layoutView */
+        $layoutView = $view->layout('components.layouts.app', ['title' => $this->product->name]);
+
+        return $layoutView;
     }
 }

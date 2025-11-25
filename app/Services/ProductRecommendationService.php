@@ -36,8 +36,8 @@ class ProductRecommendationService
         }
 
         // Create cache key based on viewed products (versioned to avoid old array cache)
-        $cacheKey = 'recommendations_v2_' . md5(implode(',', $viewedProductIds));
-        $logKey = $cacheKey . '_logged';
+        $cacheKey = 'recommendations_v2_'.md5(implode(',', $viewedProductIds));
+        $logKey = $cacheKey.'_logged';
 
         // Check if we should log (only log once per cache period)
         $shouldLog = ! Cache::has($logKey);
@@ -151,14 +151,14 @@ class ProductRecommendationService
 
         // Prepare product data for AI
         /** @var array<int, array{id: int, name: string, description: string}> $productList */
-        $productList = $allProducts->map(fn($product) => [
+        $productList = $allProducts->map(fn ($product) => [
             'id' => $product->id,
             'name' => $product->name,
             'description' => $product->description ?? '',
         ])->toArray();
 
         /** @var array<int, array{name: string, description: string}> $viewedProductData */
-        $viewedProductData = $viewedProducts->map(fn($product) => [
+        $viewedProductData = $viewedProducts->map(fn ($product) => [
             'name' => $product->name,
             'description' => $product->description ?? '',
         ])->toArray();
@@ -266,12 +266,12 @@ class ProductRecommendationService
     {
         // Format viewed products
         $viewedList = collect($viewedProducts)
-            ->map(fn($p) => "- {$p['name']}: {$p['description']}")
+            ->map(fn ($p) => "- {$p['name']}: {$p['description']}")
             ->implode("\n");
 
         // Format all available products
         $productList = collect($allProducts)
-            ->map(fn($p) => "ID {$p['id']}: {$p['name']} - {$p['description']}")
+            ->map(fn ($p) => "ID {$p['id']}: {$p['name']} - {$p['description']}")
             ->implode("\n");
 
         // Exact prompt as per requirement: "Based on these viewed products, suggest 3 similar ones from this product list:"
@@ -300,7 +300,7 @@ class ProductRecommendationService
         $recommendedIds = array_map('intval', $recommendedIds);
 
         // Filter out invalid IDs
-        $recommendedIds = array_filter($recommendedIds, fn($id) => $id > 0);
+        $recommendedIds = array_filter($recommendedIds, fn ($id) => $id > 0);
 
         if (empty($recommendedIds)) {
             return new EloquentCollection;
@@ -325,7 +325,7 @@ class ProductRecommendationService
     /**
      * Get random products as fallback.
      *
-     * @param  array<int>  $excludeIds
+     * @param  array<mixed>  $excludeIds
      * @return EloquentCollection<int, \App\Models\Product>
      */
     private function getRandomProducts(int $limit, array $excludeIds = []): EloquentCollection

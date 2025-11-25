@@ -72,11 +72,7 @@ DB_CONNECTION=sqlite
 
 7. **Configure Groq API key for AI recommendations:**
 ```env
-> **Note:** The `GROQ_API_KEY` shown in this README is a **test key** included only for demonstration purposes.  
-> It is **valid** and can be used for any real requests.  
-> 
-> If you want to run this project, please generate your own API key from:  
-> https://console.groq.com/
+# Get your API key from https://console.groq.com/
 GROQ_API_KEY=
 
 # Optional: Customize Groq API settings

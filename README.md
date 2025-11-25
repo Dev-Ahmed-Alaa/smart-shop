@@ -73,7 +73,7 @@ DB_CONNECTION=sqlite
 7. **Configure Groq API key for AI recommendations:**
 ```env
 # Get your API key from https://console.groq.com/
-GROQ_API_KEY=your-api-key-here
+GROQ_API_KEY=
 
 # Optional: Customize Groq API settings
 GROQ_MODEL=openai/gpt-oss-20b
